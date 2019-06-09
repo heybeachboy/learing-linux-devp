@@ -9,6 +9,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <fcntl.h>
 #define MAX_LIMIT 16384
 #define BACKLOG 33
 /**
@@ -35,7 +36,7 @@ void child_process(int fd){
     char outbuf[MAX_LIMIT + 1];  // extra byte for '\0'
     size_t outbuf_used = 0;
     ssize_t code;
-
+    fcntl(fd, F_SETFL, O_NONBLOCK);
     while(1)
     {
         char ch;
@@ -100,7 +101,6 @@ void init_network_socket(void)
         if(fork() == 0){
             child_process(client_fd);
         }
-
     }
 }
 
